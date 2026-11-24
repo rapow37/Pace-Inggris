@@ -16,6 +16,7 @@ model User {
   image         String?
   locale        String    @default("id")
   timezone      String    @default("Asia/Jakarta")
+  dailyGoal     Int       @default(20)
   createdAt     DateTime  @default(now())
   deletedAt     DateTime?
 

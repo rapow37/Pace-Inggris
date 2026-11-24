@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { auth, signOut } from "@/auth";
 import { PathView } from "@/components/lesson/path-view";
+import { StatusBar } from "@/components/lesson/status-bar";
 import { Button } from "@/components/ui/button";
 import { getTranslator } from "@/i18n/server";
 
@@ -33,6 +34,8 @@ export default async function AppHome() {
           </Button>
         </form>
       </div>
+
+      <StatusBar />
 
       <PathView courseSlug="english-id" />
 

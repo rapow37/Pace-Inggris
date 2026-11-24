@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { gradeExercise } from "@/domains/lesson/answer";
 import { answerInputSchema, exerciseSchema } from "@/domains/lesson/schema";
 import { computeXp, MIN_MS_PER_EXERCISE, XP_BASE } from "@/domains/gamification/xp";
+import { recordLessonCompletion } from "@/domains/progress/service";
 import { prisma } from "@/lib/prisma";
 
 const bodySchema = z.object({
@@ -42,10 +43,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   }
 
   const correctness: boolean[] = [];
+  const itemResults: { itemId: string; correct: boolean }[] = [];
   for (const row of lesson.exercises) {
     const exercise = exerciseSchema.parse(row.payloadJson);
     const given = answers.find((answer) => answer.exerciseId === exercise.id);
-    correctness.push(given ? gradeExercise(exercise, given.input) : false);
+    const correct = given ? gradeExercise(exercise, given.input) : false;
+    correctness.push(correct);
+    itemResults.push({ itemId: exercise.id, correct });
   }
 
   const { xp, accuracy, combo } = computeXp({ correctness });
@@ -76,5 +80,20 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     }),
   ]);
 
-  return NextResponse.json({ xp: awardedXp, accuracy, combo, flagged: tooFast });
+  const gamification = await recordLessonCompletion({
+    userId,
+    xp: awardedXp,
+    accuracy,
+    itemResults,
+  });
+
+  return NextResponse.json({
+    xp: awardedXp,
+    accuracy,
+    combo,
+    flagged: tooFast,
+    streak: gamification.streak,
+    streakExtended: gamification.streakExtended,
+    hearts: gamification.hearts,
+  });
 }
