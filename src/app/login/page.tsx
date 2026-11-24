@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 
 import { auth, signIn } from "@/auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { isEmailEnabled, isGoogleEnabled } from "@/env";
 
 export const instant = false;
@@ -29,19 +31,16 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 px-6 py-16">
       <div className="space-y-2">
         <h1 className="text-2xl font-semibold">Masuk ke Torang Bisa</h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="text-sm text-muted-fg">
           Lanjutkan belajar dan simpan progresmu di semua perangkat.
         </p>
       </div>
 
       {isGoogleEnabled ? (
         <form action={signInWithGoogle}>
-          <button
-            type="submit"
-            className="h-12 w-full rounded-lg border border-zinc-300 font-medium transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
-          >
+          <Button type="submit" variant="outline" className="w-full">
             Lanjut dengan Google
-          </button>
+          </Button>
         </form>
       ) : null}
 
@@ -50,28 +49,24 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           <label htmlFor="email" className="block text-sm font-medium">
             Email
           </label>
-          <input
+          <Input
             id="email"
             name="email"
             type="email"
             required
             autoComplete="email"
             placeholder="nama@contoh.com"
-            className="h-12 w-full rounded-lg border border-zinc-300 px-3 outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 dark:border-zinc-700 dark:bg-zinc-950"
           />
-          <button
-            type="submit"
-            className="h-12 w-full rounded-lg bg-emerald-600 font-medium text-white transition-colors hover:bg-emerald-700"
-          >
+          <Button type="submit" className="w-full">
             Kirim tautan masuk
-          </button>
+          </Button>
         </form>
       ) : null}
 
       {!isGoogleEnabled && !isEmailEnabled ? (
         <p
           role="status"
-          className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200"
+          className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-100"
         >
           Belum ada metode masuk yang aktif. Atur kredensial Google atau Resend di berkas
           <code className="mx-1 rounded bg-black/10 px-1">.env</code>

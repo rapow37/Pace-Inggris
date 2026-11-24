@@ -1,4 +1,5 @@
 import { auth, signOut } from "@/auth";
+import { Button } from "@/components/ui/button";
 
 export const instant = false;
 
@@ -15,18 +16,15 @@ export default async function AppHome() {
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold">Belajar</h1>
         <form action={doSignOut}>
-          <button
-            type="submit"
-            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-900"
-          >
+          <Button type="submit" variant="outline">
             Keluar
-          </button>
+          </Button>
         </form>
       </div>
-      <p className="mt-4 text-zinc-600 dark:text-zinc-400">
+      <p className="mt-4 text-muted-fg">
         Halo, {session?.user?.name ?? session?.user?.email ?? "pelajar"}.
       </p>
-      <p className="mt-2 text-sm text-zinc-500">
+      <p className="mt-2 text-sm text-muted-fg">
         Learning path dan lesson menyusul di fase berikutnya.
       </p>
     </main>
