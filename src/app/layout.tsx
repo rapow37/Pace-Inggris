@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 
 import { HeaderControls } from "@/components/header-controls";
+import { Providers } from "@/components/providers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </Link>
           <HeaderControls />
         </header>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
