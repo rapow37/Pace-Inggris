@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { auth, signOut } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { getTranslator } from "@/i18n/server";
@@ -27,6 +29,9 @@ export default async function AppHome() {
         {t("app.greeting", { name: session?.user?.name ?? session?.user?.email ?? "pelajar" })}
       </p>
       <p className="mt-2 text-sm text-muted-fg">{t("app.comingSoon")}</p>
+      <Link href="/app/settings" className="mt-6 inline-block text-sm underline">
+        {t("settings.title")}
+      </Link>
     </main>
   );
 }

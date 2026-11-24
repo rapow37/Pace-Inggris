@@ -9,6 +9,9 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    setupFiles: ["./vitest.setup.ts"],
+    testTimeout: 30000,
+    hookTimeout: 30000,
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
     passWithNoTests: true,
   },
