@@ -1,0 +1,198 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  locale        String    @default("id")
+  timezone      String    @default("Asia/Jakarta")
+  createdAt     DateTime  @default(now())
+  deletedAt     DateTime?
+
+  accounts          Account[]
+  sessions          Session[]
+  lessonProgress    UserLessonProgress[]
+  itemStates        UserItemState[]
+  xpEvents          XpEvent[]
+  streak            Streak?
+  hearts            Hearts?
+  pushSubscriptions PushSubscription[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @id
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Course {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  title      String
+  sourceLang String
+  targetLang String
+  createdAt  DateTime @default(now())
+
+  units Unit[]
+}
+
+model Unit {
+  id       String @id @default(cuid())
+  courseId String
+  order    Int
+  title    String
+
+  course Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  skills Skill[]
+
+  @@unique([courseId, order])
+}
+
+model Skill {
+  id     String  @id @default(cuid())
+  unitId String
+  order  Int
+  title  String
+  icon   String?
+
+  unit    Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@unique([unitId, order])
+}
+
+model Lesson {
+  id         String @id @default(cuid())
+  skillId    String
+  order      Int
+  version    Int    @default(1)
+  contentJson Json
+  estMinutes Int    @default(4)
+
+  skill     Skill                @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  exercises Exercise[]
+  progress  UserLessonProgress[]
+
+  @@unique([skillId, order])
+}
+
+model Exercise {
+  id          String @id @default(cuid())
+  lessonId    String
+  order       Int
+  type        String
+  payloadJson Json
+  difficulty  Int    @default(1)
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, order])
+}
+
+model UserLessonProgress {
+  userId       String
+  lessonId     String
+  status       String
+  bestAccuracy Float    @default(0)
+  completedAt  DateTime?
+  updatedAt    DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@id([userId, lessonId])
+  @@index([userId, status])
+}
+
+model UserItemState {
+  userId       String
+  itemId       String
+  ease         Float    @default(2.5)
+  intervalDays Int      @default(0)
+  dueAt        DateTime
+  reps         Int      @default(0)
+  lapses       Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, itemId])
+  @@index([userId, dueAt])
+}
+
+model XpEvent {
+  id            String   @id @default(cuid())
+  userId        String
+  amount        Int
+  source        String
+  clientEventId String   @unique
+  createdAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model Streak {
+  userId         String   @id
+  current        Int      @default(0)
+  longest        Int      @default(0)
+  lastActiveDate DateTime? @db.Date
+  freezes        Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Hearts {
+  userId       String    @id
+  count        Int       @default(5)
+  nextRefillAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  keys      Json
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
