@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { auth, signIn } from "@/auth";
 import { isEmailEnabled, isGoogleEnabled } from "@/env";
 
+export const instant = false;
+
 export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const session = await auth();
   if (session) {

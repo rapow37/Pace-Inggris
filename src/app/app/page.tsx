@@ -1,5 +1,7 @@
 import { auth, signOut } from "@/auth";
 
+export const instant = false;
+
 export default async function AppHome() {
   const session = await auth();
 
