@@ -15,6 +15,8 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   }
 
   const t = await getTranslator();
+  const googleEnabled = isGoogleEnabled();
+  const emailEnabled = isEmailEnabled();
   const { callbackUrl } = await searchParams;
   const redirectTo = typeof callbackUrl === "string" && callbackUrl ? callbackUrl : "/app";
 
@@ -36,7 +38,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
         <p className="text-sm text-muted-fg">{t("login.subtitle")}</p>
       </div>
 
-      {isGoogleEnabled ? (
+      {googleEnabled ? (
         <form action={signInWithGoogle}>
           <Button type="submit" variant="outline" className="w-full">
             {t("login.google")}
@@ -44,7 +46,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
         </form>
       ) : null}
 
-      {isEmailEnabled ? (
+      {emailEnabled ? (
         <form action={signInWithEmail} className="space-y-3">
           <label htmlFor="email" className="block text-sm font-medium">
             {t("login.emailLabel")}
@@ -63,7 +65,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
         </form>
       ) : null}
 
-      {!isGoogleEnabled && !isEmailEnabled ? (
+      {!googleEnabled && !emailEnabled ? (
         <p
           role="status"
           className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-100"

@@ -4,25 +4,25 @@ import type { Provider } from "next-auth/providers";
 import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 
-import { env, isEmailEnabled, isGoogleEnabled } from "@/env";
+import { isEmailEnabled, isGoogleEnabled } from "@/env";
 import { prisma } from "@/lib/prisma";
 
 const providers: Provider[] = [];
 
-if (isGoogleEnabled) {
+if (isGoogleEnabled()) {
   providers.push(
     Google({
-      clientId: env.AUTH_GOOGLE_ID,
-      clientSecret: env.AUTH_GOOGLE_SECRET,
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
   );
 }
 
-if (isEmailEnabled) {
+if (isEmailEnabled()) {
   providers.push(
     Resend({
-      apiKey: env.RESEND_API_KEY,
-      from: env.EMAIL_FROM,
+      apiKey: process.env.RESEND_API_KEY,
+      from: process.env.EMAIL_FROM ?? "Torang Bisa <no-reply@example.com>",
     }),
   );
 }

@@ -10,7 +10,31 @@ const envSchema = z.object({
   EMAIL_FROM: z.string().default("Torang Bisa <no-reply@example.com>"),
 });
 
-export const env = envSchema.parse(process.env);
+export type Env = z.infer<typeof envSchema>;
 
-export const isGoogleEnabled = Boolean(env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET);
-export const isEmailEnabled = Boolean(env.RESEND_API_KEY);
+let cached: Env | null = null;
+
+export function getEnv(): Env {
+  if (cached) {
+    return cached;
+  }
+
+  const parsed = envSchema.safeParse(process.env);
+  if (!parsed.success) {
+    const detail = parsed.error.issues
+      .map((issue) => `${issue.path.join(".") || "env"}: ${issue.message}`)
+      .join("; ");
+    throw new Error(`Invalid environment variables: ${detail}`);
+  }
+
+  cached = parsed.data;
+  return cached;
+}
+
+export function isGoogleEnabled(): boolean {
+  return Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
+}
+
+export function isEmailEnabled(): boolean {
+  return Boolean(process.env.RESEND_API_KEY);
+}
