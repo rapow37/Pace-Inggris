@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 
-import { ThemeToggle } from "@/components/theme-toggle";
+import { HeaderControls } from "@/components/header-controls";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Link href="/" className="font-semibold">
             Torang Bisa
           </Link>
-          <ThemeToggle />
+          <HeaderControls />
         </header>
         {children}
       </body>

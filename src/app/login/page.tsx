@@ -4,6 +4,7 @@ import { auth, signIn } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { isEmailEnabled, isGoogleEnabled } from "@/env";
+import { getTranslator } from "@/i18n/server";
 
 export const instant = false;
 
@@ -13,6 +14,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
     redirect("/app");
   }
 
+  const t = await getTranslator();
   const { callbackUrl } = await searchParams;
   const redirectTo = typeof callbackUrl === "string" && callbackUrl ? callbackUrl : "/app";
 
@@ -30,16 +32,14 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 px-6 py-16">
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold">Masuk ke Torang Bisa</h1>
-        <p className="text-sm text-muted-fg">
-          Lanjutkan belajar dan simpan progresmu di semua perangkat.
-        </p>
+        <h1 className="text-2xl font-semibold">{t("login.title")}</h1>
+        <p className="text-sm text-muted-fg">{t("login.subtitle")}</p>
       </div>
 
       {isGoogleEnabled ? (
         <form action={signInWithGoogle}>
           <Button type="submit" variant="outline" className="w-full">
-            Lanjut dengan Google
+            {t("login.google")}
           </Button>
         </form>
       ) : null}
@@ -47,7 +47,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
       {isEmailEnabled ? (
         <form action={signInWithEmail} className="space-y-3">
           <label htmlFor="email" className="block text-sm font-medium">
-            Email
+            {t("login.emailLabel")}
           </label>
           <Input
             id="email"
@@ -58,7 +58,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
             placeholder="nama@contoh.com"
           />
           <Button type="submit" className="w-full">
-            Kirim tautan masuk
+            {t("login.emailSubmit")}
           </Button>
         </form>
       ) : null}
@@ -68,9 +68,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           role="status"
           className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-100"
         >
-          Belum ada metode masuk yang aktif. Atur kredensial Google atau Resend di berkas
-          <code className="mx-1 rounded bg-black/10 px-1">.env</code>
-          untuk mengaktifkan login.
+          {t("login.noProvider")}
         </p>
       ) : null}
     </main>

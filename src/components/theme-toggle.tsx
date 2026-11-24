@@ -2,6 +2,13 @@
 
 import { useSyncExternalStore } from "react";
 
+type Labels = {
+  toggleDark: string;
+  toggleLight: string;
+  labelDark: string;
+  labelLight: string;
+};
+
 function subscribe(callback: () => void) {
   const observer = new MutationObserver(callback);
   observer.observe(document.documentElement, {
@@ -19,7 +26,7 @@ function getServerSnapshot() {
   return false;
 }
 
-export function ThemeToggle() {
+export function ThemeToggle({ labels }: { labels: Labels }) {
   const isDark = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   function toggle() {
@@ -37,10 +44,10 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-pressed={isDark}
-      aria-label={isDark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+      aria-label={isDark ? labels.toggleLight : labels.toggleDark}
       className="inline-flex h-10 items-center rounded-lg border border-border px-3 text-sm font-medium transition-colors hover:bg-fg/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >
-      {isDark ? "Mode terang" : "Mode gelap"}
+      {isDark ? labels.labelLight : labels.labelDark}
     </button>
   );
 }

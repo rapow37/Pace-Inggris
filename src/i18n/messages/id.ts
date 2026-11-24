@@ -1,0 +1,21 @@
+export const id = {
+  "home.tagline": "Belajar singkat 3–5 menit, sambil main. Terjaga setiap hari lewat streak.",
+  "home.cta": "Mulai belajar",
+  "login.title": "Masuk ke Torang Bisa",
+  "login.subtitle": "Lanjutkan belajar dan simpan progresmu di semua perangkat.",
+  "login.google": "Lanjut dengan Google",
+  "login.emailLabel": "Email",
+  "login.emailSubmit": "Kirim tautan masuk",
+  "login.noProvider":
+    "Belum ada metode masuk yang aktif. Atur kredensial Google atau Resend di berkas .env.",
+  "app.title": "Belajar",
+  "app.greeting": "Halo, {name}.",
+  "app.signOut": "Keluar",
+  "app.comingSoon": "Learning path dan lesson menyusul di fase berikutnya.",
+  "theme.toggleDark": "Aktifkan mode gelap",
+  "theme.toggleLight": "Aktifkan mode terang",
+  "theme.labelDark": "Mode gelap",
+  "theme.labelLight": "Mode terang",
+  "locale.switch": "English",
+  "locale.label": "Ganti bahasa",
+};
